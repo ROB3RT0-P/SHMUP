@@ -32,6 +32,7 @@ namespace global
 	enum class Res : uint32_t {
 		Default,
 		PlayerSprite,
+		EnemySprite,
 
 		Max = 256
 	};

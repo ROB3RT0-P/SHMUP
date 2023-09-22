@@ -2,6 +2,7 @@
 
 #include "loadingprocess.h"
 #include "entities/player.h"
+#include "controls.h"
 
 #include <string>
 
@@ -15,9 +16,11 @@ class Game :
 	public IProcess
 {
 public:
+	Game() : quit(false), player(640 * 0.5, 480 * 0.9), controls(player) {} //RJP - hardcoded for now - Change this
 
 	bool initialize(int ScreenWidth, int ScreenHeight);
 	void tickLogic();
+	void blit(SDL_Texture* texture, int x, int y);
 	void renderAndPresent();
 	void postFrameUpdate();
 	void close();
@@ -33,6 +36,8 @@ private:
 
 	virtual void onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count);
 
+	void handleEvents();
+
 	//Screen dimension constants
 	int SCREEN_WIDTH = 0;
 	int SCREEN_HEIGHT = 0;
@@ -44,4 +49,8 @@ private:
 	SDL_Window* gWindow = NULL; //The window we'll be rendering to
 	SDL_Renderer* gRenderer = NULL; //The window renderer	
 	SDL_Texture* gTexture = NULL; //Current displayed texture
+
+	bool quit;
+	Player player;
+	Controls controls;
 };

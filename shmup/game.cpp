@@ -3,6 +3,7 @@
 #include "processmanager.h"
 #include "resourcemanager.h"
 #include "entitymanager.h"
+#include "parallaxBackground.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -85,10 +86,25 @@ void Game::start(const Info& info) {
 
 void Game::tickLogic() {
 	global::processManager()->tickProcesses();
+	Game::handleEvents();
+}
+
+void Game::blit(SDL_Texture* texture, int x, int y)
+{
+	SDL_Rect dest;
+
+	dest.x = x;
+	dest.y = y;
+	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+
+	SDL_RenderCopy(gRenderer, texture, NULL, &dest);
 }
 
 void Game::renderAndPresent()
 {
+	//Set the background colour to blue
+	SDL_SetRenderDrawColor(gRenderer, 96, 180, 255, 255);
+
 	//Clear screen
 	SDL_RenderClear(gRenderer);
 
@@ -116,11 +132,25 @@ void Game::close()
 	SDL_Quit();
 }
 
+void Game::handleEvents() {
+	SDL_Event event;
+	while (SDL_PollEvent(&event) != 0) {
+		controls.handleInput(event);
+	}
+}
+
 void Game::render(const Info& info)
 {
 	//Render texture to screen
-	//SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-	playerEntity->render();
+	//Player* playerEntity = new Player;
+	//playerEntity->render(); // RJP - Don't see the point in looping back to blit() here.
+
+	SDL_Texture* playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
+	blit(playerTexture, player.getPlayerX(), player.getPlayerY());
+
+
+	//Parallax Background
+	ParallaxBackground background(gRenderer, "background1.png", "background2.png", SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void Game::onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count)

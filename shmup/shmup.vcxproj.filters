@@ -36,6 +36,12 @@
     <ClCompile Include="entities\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="controls.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parallaxBackground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -63,6 +69,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="entities\player.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="controls.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parallaxBackground.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="saveLoad.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
