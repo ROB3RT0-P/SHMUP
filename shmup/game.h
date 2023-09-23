@@ -16,7 +16,7 @@ class Game :
 	public IProcess
 {
 public:
-	Game() : quit(false), player(640 * 0.5, 480 * 0.9), controls(player) {} //RJP - hardcoded for now - Change this
+	Game() : quit(false), player(320, 432), controls(player) {} //RJP - hardcoded for now - Change this
 
 	bool initialize(int ScreenWidth, int ScreenHeight);
 	void tickLogic();

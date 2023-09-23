@@ -63,6 +63,7 @@ int main( int argc, char* args[] )
 				global::game()->renderAndPresent();
 
 				global::game()->postFrameUpdate();
+			
 			}
 		}
 	}

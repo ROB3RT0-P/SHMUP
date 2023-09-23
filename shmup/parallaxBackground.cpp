@@ -1,36 +1,54 @@
 #include "parallaxBackground.h"
+#include <iostream>
 
-ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::string& layer1Path, const std::string& layer2Path, int screenWidth, int screenHeight)
-    : renderer(renderer), screenWidth(screenWidth), screenHeight(screenHeight) {
-    backgroundLayer1 = IMG_LoadTexture(renderer, layer1Path.c_str());
-    backgroundLayer2 = IMG_LoadTexture(renderer, layer2Path.c_str());
+ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::vector<std::string>& imagePaths, int scrollSpeed) {
+    this->renderer = renderer;
+
+    for (const auto& imagePath : imagePaths) {
+        Layer layer;
+        layer.texture = loadTexture(imagePath);
+        layer.scrollSpeed = scrollSpeed;
+        layer.yOffset = 0;
+        layers.push_back(layer);
+    }
 }
 
 ParallaxBackground::~ParallaxBackground() {
-    SDL_DestroyTexture(backgroundLayer1);
-    SDL_DestroyTexture(backgroundLayer2);
-}
-
-void ParallaxBackground::Update() {
-    // Update background layer positions vertically
-    layer1Y += layer1VelY;
-    layer2Y += layer2VelY;
-
-    // Reset the layers when they go off the screen
-    if (layer1Y >= screenHeight) {
-        layer1Y = -screenHeight;
-    }
-    if (layer2Y >= screenHeight) {
-        layer2Y = -screenHeight;
+    for (const auto& layer : layers) {
+        SDL_DestroyTexture(layer.texture);
     }
 }
 
-void ParallaxBackground::Render() {
-    // Render background layers
-    SDL_Rect layer1Rect = { layer1Y, 0, screenWidth, screenHeight };
-    SDL_Rect layer2Rect = { layer2Y, 0, screenWidth, screenHeight };
+SDL_Texture* ParallaxBackground::loadTexture(const std::string& imagePath) {
+    SDL_Surface* surface = SDL_LoadBMP(imagePath.c_str());
+    if (!surface) {
+        std::cerr << "Error loading image: " << SDL_GetError() << std::endl;
+        return nullptr;
+    }
 
-    SDL_RenderCopy(renderer, backgroundLayer1, NULL, &layer1Rect);
-    SDL_RenderCopy(renderer, backgroundLayer2, NULL, &layer2Rect);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    if (!texture) {
+        std::cerr << "Error creating texture: " << SDL_GetError() << std::endl;
+        return nullptr;
+    }
+
+    return texture;
 }
 
+void ParallaxBackground::render() {
+    for (const auto& layer : layers) {
+        SDL_Rect destRect = { 0, testYOffset, 640, 480 }; //RJP - this is hardcoded but shouldn't be.
+        SDL_RenderCopy(renderer, layer.texture, nullptr, &destRect);
+    }
+}
+
+void ParallaxBackground::scroll(int yOffset) {
+    for (auto& layer : layers) {
+        testYOffset += yOffset;
+        if (layer.yOffset > screenHeight) {
+            layer.yOffset -= screenHeight; // Wrap around if the layer goes off-screen
+        }
+    }
+}

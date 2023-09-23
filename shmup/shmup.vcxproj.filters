@@ -80,5 +80,8 @@
     <ClInclude Include="saveLoad.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="debugText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

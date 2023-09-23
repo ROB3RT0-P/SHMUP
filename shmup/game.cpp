@@ -4,6 +4,7 @@
 #include "resourcemanager.h"
 #include "entitymanager.h"
 #include "parallaxBackground.h"
+#include "debugText.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -103,15 +104,23 @@ void Game::blit(SDL_Texture* texture, int x, int y)
 void Game::renderAndPresent()
 {
 	//Set the background colour to blue
-	SDL_SetRenderDrawColor(gRenderer, 96, 180, 255, 255);
+	//SDL_SetRenderDrawColor(gRenderer, 96, 180, 255, 255);
 
 	//Clear screen
 	SDL_RenderClear(gRenderer);
 
 	global::processManager()->renderProcesses();
 
+	//Debug Text
+	SDL_Color textColor = { 255, 255, 255, 255 };
+	DebugText debugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 24, textColor);
+	
+	// Render debug text
+	debugText.RenderText("Shmup", 10, 10);
+
 	//Update screen
 	SDL_RenderPresent(gRenderer);
+
 }
 
 void Game::postFrameUpdate()
@@ -141,16 +150,21 @@ void Game::handleEvents() {
 
 void Game::render(const Info& info)
 {
-	//Render texture to screen
-	//Player* playerEntity = new Player;
-	//playerEntity->render(); // RJP - Don't see the point in looping back to blit() here.
+	//Rendered in order
+	
+	//Parallax Background
+	std::vector<std::string> imagePaths = { "shmupBackground.bmp", "", "" };
+	int scrollSpeed = 1; // Adjust as needed
 
+	// Initialize the ParallaxBackground
+	ParallaxBackground background(gRenderer, imagePaths, scrollSpeed);
+	background.scroll(scrollSpeed);
+	background.render();
+	
+
+	//Player render
 	SDL_Texture* playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
 	blit(playerTexture, player.getPlayerX(), player.getPlayerY());
-
-
-	//Parallax Background
-	ParallaxBackground background(gRenderer, "background1.png", "background2.png", SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void Game::onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count)

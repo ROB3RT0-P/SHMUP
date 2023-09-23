@@ -78,6 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\Users\Rob\Desktop\ShmupMain\SDL2_ttf-2.20.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Rob\Desktop\ShmupMain\SDL2_ttf-2.20.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -126,7 +128,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(SolutionDir)..\SDL2-2.26.4\lib\x64\SDL2.lib;$(SolutionDir)..\SDL2-2.26.4\lib\x64\SDL2main.lib;$(SolutionDir)..\SDL2_image-2.6.3\lib\x64\SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)..\SDL2-2.26.4\lib\x64\SDL2.lib;$(SolutionDir)..\SDL2-2.26.4\lib\x64\SDL2main.lib;$(SolutionDir)..\SDL2_image-2.6.3\lib\x64\SDL2_image.lib;$(SolutionDir)..\SDL2_ttf-2.20.2\lib\x64\SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controls.h" />
+    <ClInclude Include="debugText.h" />
     <ClInclude Include="entities\player.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="entitymanager.h" />
