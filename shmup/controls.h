@@ -11,7 +11,7 @@ class Controls
 	public:
 		Controls(Player& player);
 
-		void handleInput(SDL_Event& event);
+		void handleInput(SDL_Event& event, float deltaTime);
 
 	private:
 		Player& player;

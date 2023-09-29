@@ -78,6 +78,9 @@ bool Game::loadInitialResources()
 
 	global::processManager()->registerProcess(&loadingProcess, raw_enum(global::TaskID::Loading), raw_enum(global::TickOrder::DontCare), raw_enum(global::RenderOrder::DontCare));
 
+	imagePaths = { "shmupBackground.bmp", "", "" };
+	//background = ParallaxBackground(gRenderer, imagePaths, scrollSpeed);
+
 	return true;
 }
 
@@ -85,9 +88,10 @@ void Game::start(const Info& info) {
 	playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
 }
 
-void Game::tickLogic() {
+void Game::tickLogic(float deltaTime) {
 	global::processManager()->tickProcesses();
-	Game::handleEvents();
+	Game::handleEvents(deltaTime);
+	//background.update();
 }
 
 void Game::blit(SDL_Texture* texture, int x, int y)
@@ -103,20 +107,18 @@ void Game::blit(SDL_Texture* texture, int x, int y)
 
 void Game::renderAndPresent()
 {
-	//Set the background colour to blue
-	//SDL_SetRenderDrawColor(gRenderer, 96, 180, 255, 255);
-
 	//Clear screen
 	SDL_RenderClear(gRenderer);
-
-	global::processManager()->renderProcesses();
 
 	//Debug Text
 	SDL_Color textColor = { 255, 255, 255, 255 };
 	DebugText debugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 24, textColor);
-	
-	// Render debug text
 	debugText.RenderText("Shmup", 10, 10);
+
+	//Background
+	//background.render();
+
+	global::processManager()->renderProcesses();
 
 	//Update screen
 	SDL_RenderPresent(gRenderer);
@@ -141,29 +143,20 @@ void Game::close()
 	SDL_Quit();
 }
 
-void Game::handleEvents() {
+void Game::handleEvents(float deltaTime) {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0) {
-		controls.handleInput(event);
+		controls.handleInput(event, deltaTime);
 	}
 }
+
 
 void Game::render(const Info& info)
 {
 	//Rendered in order
-	
-	//Parallax Background
-	std::vector<std::string> imagePaths = { "shmupBackground.bmp", "", "" };
-	int scrollSpeed = 1; // Adjust as needed
-
-	// Initialize the ParallaxBackground
-	ParallaxBackground background(gRenderer, imagePaths, scrollSpeed);
-	background.scroll(scrollSpeed);
-	background.render();
-	
 
 	//Player render
-	SDL_Texture* playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
+	playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
 	blit(playerTexture, player.getPlayerX(), player.getPlayerY());
 }
 

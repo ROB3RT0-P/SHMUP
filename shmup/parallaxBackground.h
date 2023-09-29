@@ -11,24 +11,16 @@ public:
     ParallaxBackground(SDL_Renderer* renderer, const std::vector<std::string>& imagePaths, int scrollSpeed);
     ~ParallaxBackground();
 
+    void scroll(int scrollSpeed);
     void render();
-    void scroll(int yOffset);
 
 private:
-    struct Layer {
-        SDL_Texture* texture;
-        int scrollSpeed;
-        int yOffset;
-    };
-
     SDL_Renderer* renderer;
-    std::vector<Layer> layers;
+    std::vector<SDL_Texture*> layers;
+    int scrollSpeed;
+    int totalHeight;
+    int yOffset;
 
-    SDL_Texture* loadTexture(const std::string& imagePath);
-
-    const int screenHeight = 480;
-
-    int testYOffset = 0;
+    int screenHeight = 480;
 };
-
 #endif // PARALLAX_BACKGROUND_H

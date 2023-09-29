@@ -54,11 +54,16 @@ int main( int argc, char* args[] )
 		{	
 			//Main loop flag
 			bool quit = false;
+			Uint32 prevTicks = SDL_GetTicks();
 
 			//While application is running
 			while( !quit )
 			{
-				global::game()->tickLogic();
+				Uint32 currentTicks = SDL_GetTicks();
+				float deltaTime = (currentTicks - prevTicks) / 1000.f;
+				prevTicks = currentTicks;
+
+				global::game()->tickLogic(deltaTime);
 
 				global::game()->renderAndPresent();
 

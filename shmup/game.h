@@ -1,9 +1,11 @@
-#pragma once
+
+#ifndef GAME_H
+#define GAME_H
 
 #include "loadingprocess.h"
 #include "entities/player.h"
 #include "controls.h"
-
+//#include "parallaxBackground.h"
 #include <string>
 
 // Forwards
@@ -16,14 +18,15 @@ class Game :
 	public IProcess
 {
 public:
-	Game() : quit(false), player(320, 432), controls(player) {} //RJP - hardcoded for now - Change this
+	Game() : quit(false), player(320, 432), controls(player) {}//RJP - hardcoded for now - Change this
 
 	bool initialize(int ScreenWidth, int ScreenHeight);
-	void tickLogic();
+	void tickLogic(float deltaTime);
 	void blit(SDL_Texture* texture, int x, int y);
 	void renderAndPresent();
 	void postFrameUpdate();
 	void close();
+
 
 private:
 	bool loadInitialResources();
@@ -36,9 +39,9 @@ private:
 
 	virtual void onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count);
 
-	void handleEvents();
+	void handleEvents(float deltaTime);
 
-	//Screen dimension constants
+	//Screen dimension constaints
 	int SCREEN_WIDTH = 0;
 	int SCREEN_HEIGHT = 0;
 
@@ -53,4 +56,11 @@ private:
 	bool quit;
 	Player player;
 	Controls controls;
+	ParallaxBackground background;
+
+	int scrollSpeed = 1;
+	std::vector<std::string> imagePaths;
+	SDL_Texture* playerTexture;
 };
+
+#endif //Game
