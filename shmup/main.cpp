@@ -44,19 +44,16 @@ int main( int argc, char* args[] )
 	
 	global::resourceManager()->initializeResourceDatabase(global::resourceDatabase, sizeof(global::resourceDatabase) / sizeof(global::resourceDatabase[0]), raw_enum(global::Res::Max), "./Data/");
 
-	//Start up SDL and create window
-	if( !global::game()->initialize(640, 480))
+	if( !global::game()->initialize(540, 960))
 	{
 		printf( "Failed to initialize!\n" );
 	}
 	else
 	{
 		{	
-			//Main loop flag
 			bool quit = false;
 			Uint32 prevTicks = SDL_GetTicks();
 
-			//While application is running
 			while( !quit )
 			{
 				Uint32 currentTicks = SDL_GetTicks();
@@ -68,12 +65,12 @@ int main( int argc, char* args[] )
 				global::game()->renderAndPresent();
 
 				global::game()->postFrameUpdate();
-			
+
+				quit = global::game()->handleEvents(deltaTime);
 			}
 		}
 	}
 
-	//Free resources and close SDL
 	global::game()->close();
 
 	return 0;

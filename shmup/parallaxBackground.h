@@ -12,6 +12,8 @@ public:
     ~ParallaxBackground();
 
     void scroll(int scrollSpeed);
+    void randMovement(int speed);
+    void titleRender();
     void render();
 
 private:

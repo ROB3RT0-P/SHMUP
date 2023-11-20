@@ -1,22 +1,30 @@
 #include "Enemy.h"
-#include <cstdlib>
-#include <ctime>
 
-Enemy::Enemy(SDL_Renderer* renderer, int screenWidth, int screenHeight) : renderer(renderer) {
-    width = 50;
-    height = 50;
-    x = rand() % (screenWidth - width);
-    y = rand() % (screenHeight - height);
-    speed = 2;
+#include "game.h"
+#include "global.h"
+#include "resourcemanager.h"
+#include "entitymanager.h"
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdio.h>
+
+Enemy::Enemy(int x, int y) : EnemyX(x), EnemyY(y) {};
+
+void Enemy::init()
+{
+	texture = nullptr;
+	EnemyX = 0;
+	EnemyY = 0;
 }
 
-void Enemy::move() {
-    // Move the enemy horizontally (customize movement logic as needed)
-    x += speed;
+void Enemy::render() 
+{
+	texture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::EnemySprite));
+	global::game()->blit(texture, EnemyX, EnemyY);
 }
 
-void Enemy::draw() {
-    SDL_Rect enemyRect = { x, y, width, height };
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Red color
-    SDL_RenderFillRect(renderer, &enemyRect);
+void Enemy::move() 
+{
+
 }

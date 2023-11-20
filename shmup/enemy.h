@@ -1,20 +1,38 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#pragma once
 
-#include <SDL.h>
+#include <iostream>
 
-class Enemy {
+struct SDL_Texture;
+
+class Enemy
+{
 public:
-    Enemy(SDL_Renderer* renderer, int screenWidth, int screenHeight);
+	Enemy(int x, int y);
 
-    void move();
-    void draw();
+	void init();
+	void render();
+	void move();
+	
+	void setEnemyX(int newPosX) { EnemyX += newPosX; }
+	void setEnemyY(int newPosY) { EnemyY += newPosY; }
+
+	int getEnemyX() { return EnemyX; }
+	int getEnemyY() { return EnemyY; }
+
+	Enemy() = default;
+	~Enemy() {};
+
+	void move(int newX, int newY) {
+		EnemyX += (newX * EnemySpeed);
+		EnemyY += (newY * EnemySpeed);
+	};
+
+	SDL_Texture& getTexture() { return *texture; }
 
 private:
-    int x, y;
-    int width, height;
-    int speed;
-    SDL_Renderer* renderer;
-};
+	int EnemyY;
+	int EnemyX;
+	int EnemySpeed = 10;
 
-#endif
+	SDL_Texture* texture = NULL;
+};

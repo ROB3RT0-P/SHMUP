@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
+#include <iostream>
 
 bool Game::initialize(int ScreenWidth, int ScreenHeight)
 {
@@ -31,7 +32,7 @@ bool Game::initialize(int ScreenWidth, int ScreenHeight)
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("SHMUP", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -79,19 +80,45 @@ bool Game::loadInitialResources()
 	global::processManager()->registerProcess(&loadingProcess, raw_enum(global::TaskID::Loading), raw_enum(global::TickOrder::DontCare), raw_enum(global::RenderOrder::DontCare));
 
 	imagePaths = { "shmupBackground.bmp", "", "" };
-	//background = ParallaxBackground(gRenderer, imagePaths, scrollSpeed);
-
+	titleImagePaths = { "titleBackground.bmp", "", "" };
+	background = new ParallaxBackground(gRenderer, imagePaths, 1);
+	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
+	spaceBackground = new Space(gRenderer, SCREEN_HEIGHT, SCREEN_HEIGHT, 100, 100);
+	font = TTF_OpenFont("Data/kenny/Fonts/kenneyBlocks.ttf", 10);
+	pulseText = new PulseText(gRenderer, font, "Press Start!", 100, 100);
+	textColor = { 255, 255, 255, 255 };
+	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
+	audio = new AudioPlayer();
+	audio->play("Data/titleScreen.mp3");
 	return true;
 }
 
 void Game::start(const Info& info) {
-	playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
+	//playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
+	playerEntity->setPlayerHealth( 100 );
+	currentState = GameState::START;
 }
 
 void Game::tickLogic(float deltaTime) {
 	global::processManager()->tickProcesses();
-	Game::handleEvents(deltaTime);
-	//background.update();
+
+	switch (currentState) {
+	case GameState::START:
+		titleBackground->randMovement(0);
+		pulseText->Update(deltaTime);
+		Game::handleEvents(deltaTime);
+		break;
+
+	case GameState::PLAY:
+		Game::handleEvents(deltaTime);
+		playerEntity->update(deltaTime);
+		background->scroll(3);
+		break;
+
+	case GameState::PAUSE:
+		Game::handleEvents(deltaTime);
+		break;
+	}
 }
 
 void Game::blit(SDL_Texture* texture, int x, int y)
@@ -106,22 +133,48 @@ void Game::blit(SDL_Texture* texture, int x, int y)
 }
 
 void Game::renderAndPresent()
-{
-	//Clear screen
+{	
 	SDL_RenderClear(gRenderer);
-
-	//Debug Text
-	SDL_Color textColor = { 255, 255, 255, 255 };
+	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	DebugText debugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 24, textColor);
-	debugText.RenderText("Shmup", 10, 10);
+	playerScore = std::to_string(SDL_GetTicks() / 100);
 
-	//Background
-	//background.render();
+	if (playerEntity->getPlayerHealth())
+	{
+		playerEntityHealth = std::to_string(playerEntity->getPlayerHealth());
+	}
 
-	global::processManager()->renderProcesses();
+	switch (currentState) {
+	case GameState::START:
+		titleBackground->titleRender();
+		debugText.RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
+		pulseText->Render();
+		global::processManager()->renderProcesses();
+		SDL_RenderPresent(gRenderer);
 
-	//Update screen
-	SDL_RenderPresent(gRenderer);
+		break;
+
+	case GameState::PLAY:
+		background->render();
+		debugText.RenderText("Score: " + playerScore, 10, 10);
+
+		debugText.RenderText("Ship Health: " + playerEntityHealth, 10, 40);
+
+		if (SDL_GetTicks() < 5000 && SDL_GetTicks() > 1000)
+		{
+			debugText.RenderText("Mission Start", (SCREEN_WIDTH / 2) - 110, SCREEN_HEIGHT / 2);
+			debugText.RenderText("Objective: Dodge or Destroy",
+				(SCREEN_WIDTH / 2) - 210, (SCREEN_HEIGHT / 2) + 40);
+		}
+
+		global::processManager()->renderProcesses();
+		SDL_RenderPresent(gRenderer);
+		break;
+
+	case GameState::PAUSE:
+		// RJP - Not sure if I'll implement this.
+		break;
+	}
 
 }
 
@@ -132,32 +185,66 @@ void Game::postFrameUpdate()
 
 void Game::close()
 {
-	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
+	delete starBackground;
 
-	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+	TTF_Quit();
 }
 
-void Game::handleEvents(float deltaTime) {
-	SDL_Event event;
-	while (SDL_PollEvent(&event) != 0) {
+bool Game::handleEvents(float deltaTime) {
+	while (SDL_PollEvent(&event) != 0)
+	{
+		// RJP - This could do with optimising - maybe make these switch cases?
 		controls.handleInput(event, deltaTime);
+
+		if (controls.handleInput(event, deltaTime) == 1)
+		{
+			return true;
+		}
+		else if (controls.handleInput(event, deltaTime) == 2 && currentState == GameState::START)
+		{
+			currentState = GameState::PLAY;
+			return false;
+		}
+
+		// RJP - Not sure if I will implement this.
+		/*
+		else if (controls.handleInput(event, deltaTime) == 2 && currentState == GameState::PLAY)
+		{
+			currentState = GameState::PAUSE;
+		}
+		else if (controls.handleInput(event, deltaTime) == 2 && currentState == GameState:PAUSE)
+		{
+			currentState = GameState::PAUSE;
+		}
+		*/
 	}
+
+	return 0;
 }
 
 
 void Game::render(const Info& info)
 {
-	//Rendered in order
-
-	//Player render
 	playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
-	blit(playerTexture, player.getPlayerX(), player.getPlayerY());
+
+	switch (currentState) {
+		case GameState::START:
+
+			break;
+
+		case GameState::PLAY:
+			blit(playerTexture, player.getPlayerX(), player.getPlayerY());
+			break;
+
+		case GameState::PAUSE:
+			break;
+	}
 }
 
 void Game::onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count)
