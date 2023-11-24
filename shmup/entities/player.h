@@ -16,40 +16,46 @@ public:
 	void init();
 	void render();
 	void update(float deltaTime);
-	void move(int newX, int newY, float deltaTime);
+	void move(float newX, float newY, float deltaTime);
 	float lerp(float start, float end, float t);
 	void checkBounds();
 
-	void setPlayerX(float newPosX) { playerX = newPosX; }
-	void setPlayerY(float newPosY) { playerY = newPosY; }
+	void setPlayerX(float newPosX) { fPlayerX_ = newPosX; }
+	void setPlayerY(float newPosY) { fPlayerY_ = newPosY; }
 
-	int getPlayerX() { return iPlayerX; }
-	int getPlayerY() { return iPlayerY; }
+	float getPlayerX() { return fPlayerX_; }
+	float getPlayerY() { return fPlayerY_; }
 
 	Player() = default;
 	~Player() {};
 
-	int getPlayerHealth() { return playerHealth; }
-	void damagePlayerHealth(int damage) { playerHealth -= damage; }
+	int getPlayerHealth() { return iPlayerHealth_; }
+	void damagePlayerHealth(int damage) { iPlayerHealth_ -= damage; }
 	void setPlayerHealth(int healthAmount)
 	{
-		playerHealth += healthAmount;
-		if (playerHealth > 100) { playerHealth = 100; }
+		iPlayerHealth_ += healthAmount;
+		if (iPlayerHealth_ > 100) { iPlayerHealth_ = 100; }
 	}
 
-	SDL_Texture& getTexture() { return *texture; }
-	float playerY;
-	float playerX;
-	float playerAcceleration = 10000.0f;
-	float playerVelocityX, playerVelocityY;
+	SDL_Texture& getTexture() { return *tTexture; }
+
+	float getPlayerVelocityX(){ return fPlayerVelocityX_; }
+	float getPlayerVelocityY() { return fPlayerVelocityY_; }
+	float getPlayerAcceleration() { return fPlayerAcceleration_; }
+
+	void setPlayerVelocityX( float fNewVelocityX ) { }
+	void setPlayerVelocityY( float fNewVelocityY ) { }
+	void setPlayerAcceleration( float fNewAcceleration) { }
+
 private:
-
-	float playerSpeed = 2500.0f;
-	int playerHealth = 100;
-	float boundOffset = 10.0f;
-
-	int iPlayerX = static_cast<int>(playerX);
-	int iPlayerY = static_cast<int>(playerY);
+	float fPlayerY_;
+	float fPlayerX_;
+	float fPlayerAcceleration_;
+	float fPlayerVelocityX_;
+	float fPlayerVelocityY_;
+	float fPlayerSpeed_;
+	int iPlayerHealth_;
+	float fBoundOffset_;
 
 	friend IEntity* playerEntityCreateFunc(void* user);
 	friend IEntity* playerEntityDestroyFunc(IEntity* entity, void* user);
@@ -60,5 +66,5 @@ private:
 	bool saveHighScore(int highScore) const;
 	int loadHighScore();
 
-	SDL_Texture* texture = NULL;
+	SDL_Texture* tTexture = NULL;
 };

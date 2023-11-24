@@ -28,11 +28,11 @@ class Game :
 	public IProcess
 {
 public:
-	Game() : quit(false), player(fScreenHeight / 2, fScreenWidth / 2), controls(player) {}
+	Game() : quit(false), playerEntity() {}
 
 	bool initialize(int ScreenWidth, int ScreenHeight);
 	void tickLogic(float deltaTime);
-	void blit(SDL_Texture* texture, int x, int y);
+	void blit(SDL_Texture* texture, float x, float y);
 	void renderAndPresent();
 	void postFrameUpdate();
 	void close();
@@ -57,15 +57,14 @@ private:
 
 	LoadingProcess loadingProcess;
 
-	Player* playerEntity = NULL;
+	Player* playerEntity;
 
 	SDL_Window* gWindow = NULL;
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Texture* gTexture = NULL;
 
 	bool quit;
-	Player player;
-	Controls controls;
+	Controls* controls;
 	ParallaxBackground* background;
 	ParallaxBackground* titleBackground;
 	GeneratedBackground* starBackground;

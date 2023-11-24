@@ -11,7 +11,8 @@ void GeneratedBackground::createStars(int starCount)
 {
 	std::srand(std::time(0));
 
-	for (int i = 0; i < starCount; ++i) {
+	for (int i = 0; i < starCount; ++i) 
+	{
 		stars.push_back({ 
 			static_cast<float>(std::rand() % screenWidth), 
 			static_cast<float>(std::rand() % screenHeight), 

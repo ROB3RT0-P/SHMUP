@@ -17,6 +17,7 @@ bool Game::initialize(int ScreenWidth, int ScreenHeight)
 	SCREEN_WIDTH = ScreenWidth;
 	SCREEN_HEIGHT = ScreenHeight;
 
+
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -84,19 +85,26 @@ bool Game::loadInitialResources()
 	background = new ParallaxBackground(gRenderer, imagePaths, 1);
 	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
 	spaceBackground = new Space(gRenderer, SCREEN_HEIGHT, SCREEN_HEIGHT, 100, 100);
-	font = TTF_OpenFont("Data/kenny/Fonts/kenneyBlocks.ttf", 10);
+	font = TTF_OpenFont("kenneyBlocks.ttf", 10);
 	pulseText = new PulseText(gRenderer, font, "Press Start!", 100, 100);
 	textColor = { 255, 255, 255, 255 };
 	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
 	audio = new AudioPlayer();
 	audio->play("Data/titleScreen.mp3");
+	controls = new Controls(*playerEntity);
 	return true;
 }
 
 void Game::start(const Info& info) {
 	//playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
-	playerEntity->setPlayerHealth( 100 );
+	
+	if (playerEntity)
+	{
+		playerEntity->setPlayerHealth( 90 );
+	}
+	
 	currentState = GameState::START;
+	playerEntity->init();
 }
 
 void Game::tickLogic(float deltaTime) {
@@ -121,12 +129,12 @@ void Game::tickLogic(float deltaTime) {
 	}
 }
 
-void Game::blit(SDL_Texture* texture, int x, int y)
+void Game::blit(SDL_Texture* texture, float x, float y)
 {
 	SDL_Rect dest;
 
-	dest.x = x;
-	dest.y = y;
+	dest.x = static_cast<int>(x);
+	dest.y = static_cast<int>(y);
 	SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
 
 	SDL_RenderCopy(gRenderer, texture, NULL, &dest);
@@ -135,11 +143,21 @@ void Game::blit(SDL_Texture* texture, int x, int y)
 void Game::renderAndPresent()
 {	
 	SDL_RenderClear(gRenderer);
+	global::processManager()->renderProcesses();
+	SDL_RenderPresent(gRenderer);
+	global::processManager()->renderProcesses();
+	SDL_RenderPresent(gRenderer);
+}
+
+void Game::render(const Info& info)
+{
+	playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
+
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	DebugText debugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 24, textColor);
 	playerScore = std::to_string(SDL_GetTicks() / 100);
 
-	if (playerEntity->getPlayerHealth())
+	if (playerEntity != nullptr)
 	{
 		playerEntityHealth = std::to_string(playerEntity->getPlayerHealth());
 	}
@@ -149,15 +167,11 @@ void Game::renderAndPresent()
 		titleBackground->titleRender();
 		debugText.RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
 		pulseText->Render();
-		global::processManager()->renderProcesses();
-		SDL_RenderPresent(gRenderer);
-
 		break;
 
 	case GameState::PLAY:
 		background->render();
 		debugText.RenderText("Score: " + playerScore, 10, 10);
-
 		debugText.RenderText("Ship Health: " + playerEntityHealth, 10, 40);
 
 		if (SDL_GetTicks() < 5000 && SDL_GetTicks() > 1000)
@@ -167,15 +181,13 @@ void Game::renderAndPresent()
 				(SCREEN_WIDTH / 2) - 210, (SCREEN_HEIGHT / 2) + 40);
 		}
 
-		global::processManager()->renderProcesses();
-		SDL_RenderPresent(gRenderer);
+		blit(playerTexture, playerEntity->getPlayerX(), playerEntity->getPlayerY());
+		SDL_assert(playerTexture);
 		break;
 
 	case GameState::PAUSE:
-		// RJP - Not sure if I'll implement this.
 		break;
 	}
-
 }
 
 void Game::postFrameUpdate()
@@ -199,14 +211,14 @@ void Game::close()
 bool Game::handleEvents(float deltaTime) {
 	while (SDL_PollEvent(&event) != 0)
 	{
-		// RJP - This could do with optimising - maybe make these switch cases?
-		controls.handleInput(event, deltaTime);
+		// RJP - This could do with optimising.
+		controls->handleInput(event, deltaTime);
 
-		if (controls.handleInput(event, deltaTime) == 1)
+		if (controls->handleInput(event, deltaTime) == 1)
 		{
 			return true;
 		}
-		else if (controls.handleInput(event, deltaTime) == 2 && currentState == GameState::START)
+		else if (controls->handleInput(event, deltaTime) == 2 && currentState == GameState::START)
 		{
 			currentState = GameState::PLAY;
 			return false;
@@ -226,25 +238,6 @@ bool Game::handleEvents(float deltaTime) {
 	}
 
 	return 0;
-}
-
-
-void Game::render(const Info& info)
-{
-	playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
-
-	switch (currentState) {
-		case GameState::START:
-
-			break;
-
-		case GameState::PLAY:
-			blit(playerTexture, player.getPlayerX(), player.getPlayerY());
-			break;
-
-		case GameState::PAUSE:
-			break;
-	}
 }
 
 void Game::onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count)
