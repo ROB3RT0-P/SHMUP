@@ -43,16 +43,18 @@ public:
 	float getPlayerVelocityY() { return fPlayerVelocityY_; }
 	float getPlayerAcceleration() { return fPlayerAcceleration_; }
 
-	void setPlayerVelocityX( float fNewVelocityX ) { }
-	void setPlayerVelocityY( float fNewVelocityY ) { }
+	void setPlayerVelocityX(float fNewVelocityX) { fPlayerVelocityX_ = fNewVelocityX; }
+	void setPlayerVelocityY(float fNewVelocityY) { fPlayerVelocityY_ = fNewVelocityY; }
 	void setPlayerAcceleration( float fNewAcceleration) { }
 
 private:
-	float fPlayerY_;
-	float fPlayerX_;
-	float fPlayerAcceleration_;
 	float fPlayerVelocityX_;
 	float fPlayerVelocityY_;
+
+	float fPlayerY_;
+	float fPlayerX_;
+	float fPlayerAcceleration_ = 1;
+
 	float fPlayerSpeed_;
 	int iPlayerHealth_;
 	float fBoundOffset_;
