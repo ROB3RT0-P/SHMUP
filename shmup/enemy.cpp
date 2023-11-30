@@ -1,18 +1,8 @@
-#include "Enemy.h"
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
 
-#include "game.h"
-#include "global.h"
-#include "resourcemanager.h"
-#include "entitymanager.h"
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-
-void Enemy::init()
-{
-
-}
+#include "enemy.h"
 
 void Enemy::move(int newX, int newY, float deltaTime)
 {
@@ -26,8 +16,6 @@ void Enemy::move(int newX, int newY, float deltaTime)
 	// Interpolate between current position and target position
 	fEnemyX_ = lerp(fEnemyX_, targetX, deltaTime);
 	fEnemyY_ = lerp(fEnemyY_, targetY, deltaTime);
-
-
 }
 
 float Enemy::lerp(float start, float end, float t)

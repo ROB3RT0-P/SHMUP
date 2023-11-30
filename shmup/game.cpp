@@ -1,15 +1,8 @@
-#include "game.h"
-#include "global.h"
-#include "processmanager.h"
-#include "resourcemanager.h"
-#include "entitymanager.h"
-#include "parallaxBackground.h"
-#include "debugText.h"
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-#include <iostream>
+#include "game.h"
 
 bool Game::initialize(int ScreenWidth, int ScreenHeight)
 {
@@ -84,10 +77,11 @@ bool Game::loadInitialResources()
 	titleImagePaths = { "titleBackground.bmp", "", "" };
 	background = new ParallaxBackground(gRenderer, imagePaths, 1);
 	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
-	spaceBackground = new Space(gRenderer, SCREEN_HEIGHT, SCREEN_HEIGHT, 100, 100);
-	font = TTF_OpenFont("kenneyBlocks.ttf", 10);
-	pulseText = new PulseText(gRenderer, font, "Press Start!", 100, 100);
+
 	textColor = { 255, 255, 255, 255 };
+	debugText = new DebugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 25, textColor);
+	pulseText = new PulseText(gRenderer,"Data/kenny/Fonts/kenneyBlocks.ttf", 10, textColor);
+	
 	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
 	audio = new AudioPlayer();
 	audio->play("Data/titleScreen.mp3");
@@ -97,14 +91,13 @@ bool Game::loadInitialResources()
 
 void Game::start(const Info& info) {
 	//playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
-	
+	currentState = GameState::START;
+
 	if (playerEntity)
 	{
-		playerEntity->setPlayerHealth( 90 );
+		playerEntity->init();
+		playerEntity->setPlayerHealth( 100 );
 	}
-	
-	currentState = GameState::START;
-	playerEntity->init();
 }
 
 void Game::tickLogic(float deltaTime) {
@@ -154,7 +147,7 @@ void Game::render(const Info& info)
 	playerTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::PlayerSprite));
 
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
-	DebugText debugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 24, textColor);
+	
 	playerScore = std::to_string(SDL_GetTicks() / 100);
 
 	if (playerEntity != nullptr)
@@ -165,19 +158,19 @@ void Game::render(const Info& info)
 	switch (currentState) {
 	case GameState::START:
 		titleBackground->titleRender();
-		debugText.RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
-		pulseText->Render();
+		debugText->RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
+		pulseText->Render("Press Start", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 2);
 		break;
 
 	case GameState::PLAY:
 		background->render();
-		debugText.RenderText("Score: " + playerScore, 10, 10);
-		debugText.RenderText("Ship Health: " + playerEntityHealth, 10, 40);
+		debugText->RenderText("Score: " + playerScore, 10, 10);
+		debugText->RenderText("Ship Health: " + playerEntityHealth, 10, 40);
 
 		if (SDL_GetTicks() < 5000 && SDL_GetTicks() > 1000)
 		{
-			debugText.RenderText("Mission Start", (SCREEN_WIDTH / 2) - 110, SCREEN_HEIGHT / 2);
-			debugText.RenderText("Objective: Dodge or Destroy",
+			debugText->RenderText("Mission Start", (SCREEN_WIDTH / 2) - 110, SCREEN_HEIGHT / 2);
+			debugText->RenderText("Objective: Dodge or Destroy",
 				(SCREEN_WIDTH / 2) - 210, (SCREEN_HEIGHT / 2) + 40);
 		}
 
@@ -201,7 +194,6 @@ void Game::close()
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
-	delete starBackground;
 
 	IMG_Quit();
 	SDL_Quit();

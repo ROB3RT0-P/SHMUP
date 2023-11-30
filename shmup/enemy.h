@@ -1,4 +1,16 @@
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #pragma once
+
+#include "entitymanager.h"
+#include "game.h"
+#include "global.h"
+#include "resourcemanager.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 
@@ -13,8 +25,7 @@ public:
 		fEnemyY_ = fDefaultEnemyPosY_;
 	};
 
-	void init();
-	void render();
+	void render();	
 	void move();
 	void createEnemies( float screenWidth, float screenHeight, int numEnemies );
 	float lerp(float start, float end, float t);

@@ -1,5 +1,8 @@
-#ifndef PARALLAX_BACKGROUND_H
-#define PARALLAX_BACKGROUND_H
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
+#pragma once
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -25,4 +28,3 @@ private:
 
     int screenHeight = 480;
 };
-#endif // PARALLAX_BACKGROUND_H

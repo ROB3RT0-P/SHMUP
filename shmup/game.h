@@ -1,15 +1,26 @@
-#ifndef GAME_H
-#define GAME_H
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
+
+#pragma once
 
 #include "loadingprocess.h"
 #include "entities/player.h"
 #include "controls.h"
 #include "parallaxBackground.h"
+#include "debugText.h"
 #include "textPulse.h"
-#include "generatedBackground.h"
-#include "space.h"
-#include <string>
 #include "audio.h"
+#include "global.h"
+#include "processmanager.h"
+#include "resourcemanager.h"
+#include "entitymanager.h"
+
+#include <string>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdio.h>
+#include <iostream>
 
 // Forwards
 struct SDL_Texture;
@@ -67,25 +78,22 @@ private:
 	Controls* controls;
 	ParallaxBackground* background;
 	ParallaxBackground* titleBackground;
-	GeneratedBackground* starBackground;
 
 	int scrollSpeed = 1;
 	std::vector<std::string> imagePaths;
 	std::vector<std::string> titleImagePaths;
 	TTF_Font* font;
+	DebugText* debugText;
 	PulseText* pulseText;
 	SDL_Texture* playerTexture;
-	Space* spaceBackground;
+	AudioPlayer* audio;
 
 	GameState currentState = GameState::START;
 
 	SDL_Color textColor;
+	SDL_Event event;
 	std::string playerScore;
 	std::string playerEntityHealth;
 
-	SDL_Event event;
 
-	AudioPlayer* audio;
 };
-
-#endif //Game

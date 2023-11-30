@@ -1,4 +1,9 @@
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #pragma once
+
 #include <iostream>
 #include <string>
 #include <SDL.h>

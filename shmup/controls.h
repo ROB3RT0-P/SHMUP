@@ -1,10 +1,11 @@
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #pragma once
 
-#ifndef CONTROLS_H
-#define CONTROLS_H
-
 #include "../shmup/entities/player.h"
-#include <sdl.h>
+#include <SDL.h>
 
 class Controls
 {
@@ -16,6 +17,3 @@ class Controls
 	private:
 		Player& player;
 };
-
-
-#endif //CONTROLS_H

@@ -1,4 +1,7 @@
-#include <SDL.h>
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #include "controls.h"
 
 Controls::Controls(Player& playerEntity) : player(playerEntity) {}

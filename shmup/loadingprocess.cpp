@@ -1,3 +1,6 @@
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
 
 #include "loadingprocess.h"
 #include "global.h"

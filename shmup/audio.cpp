@@ -1,3 +1,7 @@
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #include "audio.h"
 
 AudioPlayer::AudioPlayer() {

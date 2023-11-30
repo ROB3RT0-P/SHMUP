@@ -1,13 +1,9 @@
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #include "player.h"
-
 #include "../game.h"
-#include "../global.h"
-#include "../resourcemanager.h"
-#include "../entitymanager.h"
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
 
 Player::Player(float x, float y) : fPlayerX_(x), fPlayerY_(y) {};
 
@@ -38,10 +34,10 @@ void Player::init()
     tTexture = nullptr;
 	fPlayerY_ = 100; // RJP - default starting point
 	fPlayerX_ = 100; // RJP - default starting point
-	fPlayerAcceleration_ = 10000.0f;
+	fPlayerAcceleration_ = 500.0f;
 	fPlayerVelocityX_ = 0;
 	fPlayerVelocityY_ = 0;
-	fPlayerSpeed_ = 2500.0f;
+	fPlayerSpeed_ = 500.0f;
 	iPlayerHealth_ = 0;
 	fBoundOffset_ = 10.0f;
 }

@@ -1,8 +1,17 @@
+/*******************************************
+	Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #pragma once
 
+#include "../global.h"
+#include "../resourcemanager.h"
+#include "../entitymanager.h"
 #include "../entity.h"
-
 #include <iostream>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdio.h>
 
 struct SDL_Texture;
 
@@ -53,7 +62,7 @@ private:
 
 	float fPlayerY_;
 	float fPlayerX_;
-	float fPlayerAcceleration_ = 1;
+	float fPlayerAcceleration_;
 
 	float fPlayerSpeed_;
 	int iPlayerHealth_;

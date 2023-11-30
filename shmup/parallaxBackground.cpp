@@ -1,5 +1,8 @@
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #include "parallaxBackground.h"
-#include <iostream>
 
 ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::vector<std::string>& imagePaths, int scrollSpeed)
     : renderer(renderer), screenHeight(0), yOffset(0) 

@@ -1,16 +1,21 @@
+/*******************************************
+    Written by Robert Parry [RJP] - 2023
+*******************************************/
+
 #pragma once
 
+#include <iostream>
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <string>
 
 class PulseText {
 public:
-    PulseText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y);
+    PulseText(SDL_Renderer* renderer, const std::string& fontPath, int fontSize, SDL_Color textColor);
     ~PulseText();
 
     void Update(float deltaTime);
-    void Render();
+    void Render(const std::string& text, int x, int y);
 
 private:
     SDL_Renderer* renderer;
@@ -21,5 +26,6 @@ private:
     float scaleFactor;
     bool increasing;
 
-    void CreateTexture();
+    SDL_Color textColor;
+    Uint8 scale;
 };
