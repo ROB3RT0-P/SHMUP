@@ -1,3 +1,0 @@
-D:\personal\shmup\shmup\x64\Debug\shmup.exe
-D:\UnitySrc\personal\shmup\shmup\x64\Debug\shmup.exe
-C:\Users\Rob\Desktop\ShmupMain\shmup\x64\Debug\shmup.exe

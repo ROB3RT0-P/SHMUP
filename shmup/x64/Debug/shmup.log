@@ -1,6 +1,0 @@
-﻿  game.cpp
-C:\Users\Rob\Desktop\ShmupMain\shmup\game.h(19,46): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\Rob\Desktop\ShmupMain\shmup\game.h(19,35): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  parallaxBackground.cpp
-  Generating Code...
-  shmup.vcxproj -> C:\Users\Rob\Desktop\ShmupMain\shmup\x64\Debug\shmup.exe
