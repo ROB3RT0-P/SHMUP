@@ -401,3 +401,6 @@ SDL2_image-2.6.3/
 SDL2_mixer-2.6.3/
 SDL2_ttf-2.20.2/
 SDL2-2.26.4/
+shmup/x64/
+shmup/*shmup.vcxproj
+*.obj
