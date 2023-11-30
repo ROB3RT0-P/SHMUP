@@ -73,23 +73,20 @@ private:
 	SDL_Window* gWindow = NULL;
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Texture* gTexture = NULL;
-
-	bool quit;
-	Controls* controls;
-	ParallaxBackground* background;
-	ParallaxBackground* titleBackground;
-
-	int scrollSpeed = 1;
-	std::vector<std::string> imagePaths;
-	std::vector<std::string> titleImagePaths;
 	TTF_Font* font;
 	DebugText* debugText;
 	PulseText* pulseText;
 	SDL_Texture* playerTexture;
 	AudioPlayer* audio;
+	Controls* controls;
+	ParallaxBackground* background;
+	ParallaxBackground* titleBackground;
 
+	bool quit;
+	int scrollSpeed = 1;
+	std::vector<std::string> imagePaths;
+	std::vector<std::string> titleImagePaths;
 	GameState currentState = GameState::START;
-
 	SDL_Color textColor;
 	SDL_Event event;
 	std::string playerScore;

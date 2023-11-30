@@ -73,8 +73,8 @@ bool Game::loadInitialResources()
 
 	global::processManager()->registerProcess(&loadingProcess, raw_enum(global::TaskID::Loading), raw_enum(global::TickOrder::DontCare), raw_enum(global::RenderOrder::DontCare));
 
-	imagePaths = { "shmupBackground.bmp", "", "" };
-	titleImagePaths = { "titleBackground.bmp", "", "" };
+	imagePaths = { "Data/shmupBackground.bmp", "", "" };
+	titleImagePaths = { "Data/titleBackground.bmp", "", "" };
 	background = new ParallaxBackground(gRenderer, imagePaths, 1);
 	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
 
@@ -84,7 +84,7 @@ bool Game::loadInitialResources()
 	
 	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
 	audio = new AudioPlayer();
-	audio->play("Data/titleScreen.mp3");
+	audio->play("Data/GameMusic.mp3");
 	controls = new Controls(*playerEntity);
 	return true;
 }
@@ -159,7 +159,7 @@ void Game::render(const Info& info)
 	case GameState::START:
 		titleBackground->titleRender();
 		debugText->RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
-		pulseText->Render("Press Start", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 2);
+		//pulseText->Render("Press Start", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 2); // Memory leak - urgent fix
 		break;
 
 	case GameState::PLAY:
@@ -194,6 +194,14 @@ void Game::close()
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
+	font = NULL;
+	debugText = NULL;
+	pulseText = NULL;
+	playerTexture = NULL;
+	audio = NULL;
+	controls = NULL;
+	background = NULL;
+	titleBackground = NULL;
 
 	IMG_Quit();
 	SDL_Quit();

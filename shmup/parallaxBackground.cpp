@@ -20,12 +20,12 @@ ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::vector
         if (texture == nullptr) {
             SDL_Log("Failed to create texture: %s", SDL_GetError());
             continue;
-        }
 
-        layers.push_back(texture);
-        int w, h;
-        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        totalHeight += h;
+            layers.push_back(texture);
+            int w, h;
+            SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+            totalHeight += h;
+        }
     }
 }
 
