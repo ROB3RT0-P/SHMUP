@@ -406,3 +406,5 @@ shmup/x64/
 shmup/shmup.vcxproj
 shmup/shmup.vcxproj
 shmup/shmup.vcxproj.filters
+shmup/SDL2_mixer.dll
+shmup/SDL2_ttf.dll

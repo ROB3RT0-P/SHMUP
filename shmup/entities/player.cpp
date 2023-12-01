@@ -39,7 +39,9 @@ void Player::init()
 	fPlayerVelocityY_ = 0;
 	fPlayerSpeed_ = 500.0f;
 	iPlayerHealth_ = 0;
-	fBoundOffset_ = 10.0f;
+	fBoundOffset_ = 40.0f;
+	fPlayerFloatSpeedX_ = rand() % (5 - 2) * 0.1f;
+	fPlayerFloatSpeedY_ = rand() % (5 - 2) * 0.1f;
 }
 
 void Player::update(float deltaTime)
@@ -69,6 +71,19 @@ void Player::move(float newX, float newY, float deltaTime)
 	//checkBounds();
 }
 
+void Player::floatPlayer()
+{
+	/*
+	fPlayerX_ += rand() % (5 - 2) * 0.01f;
+	fPlayerY_ += rand() % (5 - 2) * 0.01f;
+	*/
+	fPlayerX_ += fPlayerFloatSpeedX_ * 0.5f;
+	fPlayerY_ += fPlayerFloatSpeedY_;
+
+	if (fPlayerX_ < 10.0f || fPlayerX_ >(540.0f - fBoundOffset_)) fPlayerFloatSpeedX_ = -fPlayerFloatSpeedX_;
+	if (fPlayerY_ < 10.0f || fPlayerY_ >(960.0f - fBoundOffset_)) fPlayerFloatSpeedY_ = -fPlayerFloatSpeedY_;
+}
+
 float Player::lerp(float start, float end, float t)
 {
 	return start + t * (end - start);
@@ -76,8 +91,8 @@ float Player::lerp(float start, float end, float t)
 
 void Player::checkBounds()
 {
-	if (fPlayerX_ < 40.0f) fPlayerX_ = 40.0f;
-	if (fPlayerY_ < 40.0f) fPlayerY_ = 40.0f;
+	if (fPlayerX_ < 10.0f) fPlayerX_ = 10.0f;
+	if (fPlayerY_ < 10.0f) fPlayerY_ = 10.0f;
 	if (fPlayerX_ > (540.0f - fBoundOffset_)) fPlayerX_ = (540.0f - fBoundOffset_);
 	if (fPlayerY_ > (960.0f - fBoundOffset_)) fPlayerY_ = (960.0f - fBoundOffset_);
 }

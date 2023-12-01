@@ -11,11 +11,11 @@
 
 class PulseText {
 public:
-    PulseText(SDL_Renderer* renderer, const std::string& fontPath, int fontSize, SDL_Color textColor);
+    PulseText(SDL_Renderer* renderer, const std::string& fontPath, int fontSize, SDL_Color textColor, const std::string text);
     ~PulseText();
 
     void Update(float deltaTime);
-    void Render(const std::string& text, int x, int y);
+    void Render(int x, int y);
 
 private:
     SDL_Renderer* renderer;

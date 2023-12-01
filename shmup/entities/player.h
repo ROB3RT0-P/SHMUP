@@ -27,6 +27,7 @@ public:
 	void update(float deltaTime);
 	void move(float newX, float newY, float deltaTime);
 	float lerp(float start, float end, float t);
+	void floatPlayer();
 	void checkBounds();
 
 	void setPlayerX(float newPosX) { fPlayerX_ = newPosX; }
@@ -63,6 +64,8 @@ private:
 	float fPlayerY_;
 	float fPlayerX_;
 	float fPlayerAcceleration_;
+	float fPlayerFloatSpeedY_;
+	float fPlayerFloatSpeedX_;
 
 	float fPlayerSpeed_;
 	int iPlayerHealth_;

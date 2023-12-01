@@ -10,7 +10,6 @@ bool Game::initialize(int ScreenWidth, int ScreenHeight)
 	SCREEN_WIDTH = ScreenWidth;
 	SCREEN_HEIGHT = ScreenHeight;
 
-
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
@@ -73,31 +72,39 @@ bool Game::loadInitialResources()
 
 	global::processManager()->registerProcess(&loadingProcess, raw_enum(global::TaskID::Loading), raw_enum(global::TickOrder::DontCare), raw_enum(global::RenderOrder::DontCare));
 
-	imagePaths = { "Data/shmupBackground.bmp", "", "" };
-	titleImagePaths = { "Data/titleBackground.bmp", "", "" };
+	imagePaths = { "Data/shmupBackground.bmp", "shmupBackground.bmp", "" };
+	titleImagePaths = { "Data/titleBackground.bmp", "titleBackground.bmp", "" };
 	background = new ParallaxBackground(gRenderer, imagePaths, 1);
 	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
-
+	debugTextSize = 35;
+	debugTextSizeInGame = 25;
 	textColor = { 255, 255, 255, 255 };
-	debugText = new DebugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", 25, textColor);
-	pulseText = new PulseText(gRenderer,"Data/kenny/Fonts/kenneyBlocks.ttf", 10, textColor);
+	debugText = new DebugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", debugTextSize, textColor);
+	debugTextInGame = new DebugText(gRenderer, "Data/kenny/Fonts/kenneyBlocks.ttf", debugTextSizeInGame, textColor);
+	pulseText = new PulseText(gRenderer,"Data/kenny/Fonts/kenneyBlocks.ttf", 25, textColor, "Press Start");
 	
 	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
 	audio = new AudioPlayer();
-	audio->play("Data/GameMusic.mp3");
+	audio->play("Data/titleMusic.mp3");
 	controls = new Controls(*playerEntity);
 	return true;
 }
 
 void Game::start(const Info& info) {
 	//playerEntity = static_cast<Player*>(global::entityManager()->createEntity(raw_enum(global::EntityType::Player)));
-	currentState = GameState::START;
+
+	fScreenWidth = static_cast<float>(SCREEN_WIDTH);
+	fScreenHeight = static_cast<float>(SCREEN_HEIGHT);
 
 	if (playerEntity)
 	{
 		playerEntity->init();
 		playerEntity->setPlayerHealth( 100 );
+		playerEntity->setPlayerX(fScreenWidth * 0.5f);
+		playerEntity->setPlayerY(fScreenHeight * 0.7f);
 	}
+	
+	currentState = GameState::START;
 }
 
 void Game::tickLogic(float deltaTime) {
@@ -108,12 +115,23 @@ void Game::tickLogic(float deltaTime) {
 		titleBackground->randMovement(0);
 		pulseText->Update(deltaTime);
 		Game::handleEvents(deltaTime);
+		prevTime = SDL_GetTicks();
+		bStateSwitch = true;
+		playerEntity->floatPlayer();
 		break;
 
 	case GameState::PLAY:
+		if (bStateSwitch)
+		{
+			audio->play("Data/gameMusic.mp3");
+			bStateSwitch = false;
+		}
+
+		//playerEntity->move(100, 100, deltaTime);
 		Game::handleEvents(deltaTime);
 		playerEntity->update(deltaTime);
 		background->scroll(3);
+		playerScore = std::to_string((SDL_GetTicks() - prevTime) / 100);
 		break;
 
 	case GameState::PAUSE:
@@ -148,8 +166,6 @@ void Game::render(const Info& info)
 
 	SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 	
-	playerScore = std::to_string(SDL_GetTicks() / 100);
-
 	if (playerEntity != nullptr)
 	{
 		playerEntityHealth = std::to_string(playerEntity->getPlayerHealth());
@@ -158,20 +174,20 @@ void Game::render(const Info& info)
 	switch (currentState) {
 	case GameState::START:
 		titleBackground->titleRender();
-		debugText->RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 3);
-		//pulseText->Render("Press Start", (SCREEN_WIDTH / 4) + 25, SCREEN_HEIGHT / 2); // Memory leak - urgent fix
+		playerEntity->render();
+		debugText->RenderText("GALACTIC HAVOC", (SCREEN_WIDTH / 4) - 35, SCREEN_HEIGHT / 3);
+		pulseText->Render((SCREEN_WIDTH / 3) + 35, SCREEN_HEIGHT / 2);
 		break;
-
 	case GameState::PLAY:
 		background->render();
-		debugText->RenderText("Score: " + playerScore, 10, 10);
-		debugText->RenderText("Ship Health: " + playerEntityHealth, 10, 40);
+		debugTextInGame->RenderText("Score: " + playerScore, 10, 10);
+		debugTextInGame->RenderText("Ship Health: " + playerEntityHealth, 10, 40);
 
 		if (SDL_GetTicks() < 5000 && SDL_GetTicks() > 1000)
 		{
-			debugText->RenderText("Mission Start", (SCREEN_WIDTH / 2) - 110, SCREEN_HEIGHT / 2);
-			debugText->RenderText("Objective: Dodge or Destroy",
-				(SCREEN_WIDTH / 2) - 210, (SCREEN_HEIGHT / 2) + 40);
+			debugTextInGame->RenderText("Mission Start", (SCREEN_WIDTH / 2) - 130, SCREEN_HEIGHT / 2);
+			debugTextInGame->RenderText("Objective: Dodge or Destroy",
+				(SCREEN_WIDTH / 2) - 230, (SCREEN_HEIGHT / 2) + 40);
 		}
 
 		blit(playerTexture, playerEntity->getPlayerX(), playerEntity->getPlayerY());

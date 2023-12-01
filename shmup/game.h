@@ -60,11 +60,12 @@ private:
 
 	virtual void onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count);
 
+
+
 	int SCREEN_WIDTH = 0;
 	int SCREEN_HEIGHT = 0;
-
-	float fScreenWidth = static_cast<float>(SCREEN_WIDTH);
-	float fScreenHeight = static_cast<float>(SCREEN_HEIGHT);
+	float fScreenWidth;
+	float fScreenHeight;
 
 	LoadingProcess loadingProcess;
 
@@ -73,8 +74,11 @@ private:
 	SDL_Window* gWindow = NULL;
 	SDL_Renderer* gRenderer = NULL;
 	SDL_Texture* gTexture = NULL;
+
+	// RJP - These variables need renaming.
 	TTF_Font* font;
 	DebugText* debugText;
+	DebugText* debugTextInGame;
 	PulseText* pulseText;
 	SDL_Texture* playerTexture;
 	AudioPlayer* audio;
@@ -84,6 +88,9 @@ private:
 
 	bool quit;
 	int scrollSpeed = 1;
+	int prevTime;
+	int debugTextSize;
+	int debugTextSizeInGame;
 	std::vector<std::string> imagePaths;
 	std::vector<std::string> titleImagePaths;
 	GameState currentState = GameState::START;
@@ -92,5 +99,5 @@ private:
 	std::string playerScore;
 	std::string playerEntityHealth;
 
-
+	bool bStateSwitch;
 };
