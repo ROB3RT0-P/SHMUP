@@ -25,16 +25,21 @@
 	distribution.
 *********************************************************************************/
 
-/**************************************************
-	RJP - TODO: Switch to entity manager
-				Render enemies
-				Collision
-				Game over text
-				Game over music
-				Code cleanup - Variable names
-				Pulse text not fading correctly
-				Switch to stateManager.cpp
-**************************************************/
+/*********************************************************************************
+	RJP - TODO: - Switch to entity manager
+				- Render enemies
+				- Collision
+				- Game over text
+				- Game over music
+				- Code cleanup - Variable names
+				- Pulse text not fading correctly
+				- Switch to stateManager.cpp
+				- Refactor process manager so that the code it's calling
+				  is called directly instead.
+				- Rewrite debugText so that each letter is it's 
+				  own texture and then render them separately.
+				- Write a vector2D class for the player's position.
+*********************************************************************************/
 
 #include "global.h"
 #include "game.h"

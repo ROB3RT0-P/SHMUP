@@ -86,6 +86,7 @@ private:
 	Controls* controls;
 	ParallaxBackground* background;
 	ParallaxBackground* titleBackground;
+	int iInputReturn;
 
 	bool quit;
 	int scrollSpeed = 1;

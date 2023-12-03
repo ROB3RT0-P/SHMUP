@@ -30,7 +30,7 @@ void Player::registerWithEntityManager()
 	global::entityManager()->registerEntityCreator(raw_enum(global::EntityType::Player), playerEntityCreateFunc, playerEntityDestroyFunc, NULL);
 }
 
-void Player::init()
+void Player::init(float fScreenWidth, float fScreenHeight)
 {
     tTexture = nullptr;
 	fPlayerY_ = 100; // RJP - default starting point
@@ -43,6 +43,10 @@ void Player::init()
 	fBoundOffset_ = 40.0f;
 	fPlayerFloatSpeedX_ = rand() % (5 - 2) * 0.1f;
 	fPlayerFloatSpeedY_ = rand() % (5 - 2) * 0.1f;
+
+	setPlayerHealth(100);
+	setPlayerX(fScreenWidth * 0.5f);
+	setPlayerY(fScreenHeight * 0.7f);
 }
 
 void Player::update(float deltaTime)

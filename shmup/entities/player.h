@@ -23,7 +23,7 @@ public:
 	
 	Player(float x, float y);
 
-	void init();
+	void init(float fScreenWidth, float fScreenHeight);
 	void render();
 	void update(float deltaTime);
 	void move(float newX, float newY, float deltaTime);

@@ -99,10 +99,7 @@ void Game::start(const Info& info) {
 
 	if (playerEntity)
 	{
-		playerEntity->init();
-		playerEntity->setPlayerHealth( 100 );
-		playerEntity->setPlayerX(fScreenWidth * 0.5f);
-		playerEntity->setPlayerY(fScreenHeight * 0.7f);
+		playerEntity->init((fScreenWidth * 0.5f), (fScreenHeight * 0.7f));
 	}
 	
 	currentState = GameState::START;
@@ -155,8 +152,6 @@ void Game::blit(SDL_Texture* texture, float x, float y)
 void Game::renderAndPresent()
 {	
 	SDL_RenderClear(gRenderer);
-	global::processManager()->renderProcesses();
-	SDL_RenderPresent(gRenderer);
 	global::processManager()->renderProcesses();
 	SDL_RenderPresent(gRenderer);
 }
@@ -225,17 +220,18 @@ void Game::close()
 	TTF_Quit();
 }
 
-bool Game::handleEvents(float deltaTime) {
+bool Game::handleEvents(float deltaTime) 
+{
 	while (SDL_PollEvent(&event) != 0)
 	{
-		// RJP - This could do with optimising.
 		controls->handleInput(event, deltaTime);
+		iInputReturn = controls->handleInput(event, deltaTime);
 
-		if (controls->handleInput(event, deltaTime) == 1)
+		if (iInputReturn == 1)
 		{
 			return true;
 		}
-		else if (controls->handleInput(event, deltaTime) == 2 && currentState == GameState::START)
+		else if (iInputReturn == 2 && currentState == GameState::START)
 		{
 			currentState = GameState::PLAY;
 			return false;
