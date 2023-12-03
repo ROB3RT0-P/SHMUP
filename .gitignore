@@ -403,8 +403,6 @@ SDL2_ttf-2.20.2/
 SDL2-2.26.4/
 shmup/x64/
 
-shmup/shmup.vcxproj
-shmup/shmup.vcxproj
 shmup/shmup.vcxproj.filters
 shmup/SDL2_mixer.dll
 shmup/SDL2_ttf.dll
