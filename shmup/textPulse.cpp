@@ -1,5 +1,6 @@
 /*******************************************
     Written by Robert Parry [RJP] - 2023
+    Refer to main.cpp for the license
 *******************************************/
 
 #include "textPulse.h"

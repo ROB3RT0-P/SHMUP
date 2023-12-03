@@ -1,5 +1,6 @@
 /*******************************************
 	Written by Robert Parry [RJP] - 2023
+	Refer to main.cpp for the license
 *******************************************/
 
 #include "enemy.h"
@@ -35,9 +36,4 @@ void Enemy::render()
 {
 	tTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::EnemySprite));
 	global::game()->blit(tTexture, fEnemyX_, fEnemyY_);
-}
-
-void Enemy::move() 
-{
-
 }
