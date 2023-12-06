@@ -1,4 +1,4 @@
-# Galactic Havoc - Shmup game
+# Galactic Havoc
 
 Copyright (c) Robert Parry - 2023
 
