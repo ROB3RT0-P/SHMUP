@@ -73,10 +73,9 @@ bool Game::loadInitialResources()
 
 	global::processManager()->registerProcess(&loadingProcess, raw_enum(global::TaskID::Loading), raw_enum(global::TickOrder::DontCare), raw_enum(global::RenderOrder::DontCare));
 
-	imagePaths = { "Data/shmupBackground.bmp", "shmupBackground.bmp", "" };
-	titleImagePaths = { "Data/titleBackground.bmp", "titleBackground.bmp", "" };
+	imagePaths = { "Data/textures/shmupBackground.bmp", "", ""};
 	background = new ParallaxBackground(gRenderer, imagePaths, 1);
-	titleBackground = new ParallaxBackground(gRenderer, titleImagePaths, 1);
+	titleBackground = new ParallaxBackground(gRenderer, imagePaths, 0);
 	debugTextSize = 35;
 	debugTextSizeInGame = 25;
 	textColor = { 255, 255, 255, 255 };
@@ -86,7 +85,7 @@ bool Game::loadInitialResources()
 	
 	playerEntity = new Player( fScreenWidth / 2, fScreenHeight / 2 );
 	audio = new AudioPlayer();
-	audio->play("Data/titleMusic.mp3");
+	audio->play("Data/music/BeautyFlow.mp3");
 	controls = new Controls(*playerEntity);
 	return true;
 }
@@ -121,7 +120,11 @@ void Game::tickLogic(float deltaTime) {
 	case GameState::PLAY:
 		if (bStateSwitch)
 		{
-			audio->play("Data/gameMusic.mp3");
+			audio->play("Data/music/SpaceFighterLoop.mp3");
+			
+			playerEntity->setPlayerX(fScreenWidth * 0.5f);
+			playerEntity->setPlayerY(fScreenHeight * 0.7f);
+			
 			bStateSwitch = false;
 		}
 
@@ -179,7 +182,7 @@ void Game::render(const Info& info)
 		debugTextInGame->RenderText("Score: " + playerScore, 10, 10);
 		debugTextInGame->RenderText("Ship Health: " + playerEntityHealth, 10, 40);
 
-		if (SDL_GetTicks() < 5000 && SDL_GetTicks() > 1000)
+		if (SDL_GetTicks() < (5000 + prevTime) && SDL_GetTicks() > 1000)
 		{
 			debugTextInGame->RenderText("Mission Start", (SCREEN_WIDTH / 2) - 130, SCREEN_HEIGHT / 2);
 			debugTextInGame->RenderText("Objective: Dodge or Destroy",

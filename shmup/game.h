@@ -32,7 +32,8 @@ enum class GameState
 {
 	START,
 	PLAY,
-	PAUSE
+	PAUSE,
+	GAMEOVER
 };
 
 class Game : 
@@ -60,8 +61,6 @@ private:
 	virtual void completed(const Info& info) {};
 
 	virtual void onLoadComplete(LoadingProcess::LoadRequest* loadedResources, size_t count);
-
-
 
 	int SCREEN_WIDTH = 0;
 	int SCREEN_HEIGHT = 0;

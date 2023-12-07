@@ -6,12 +6,13 @@
 #include "parallaxBackground.h"
 
 ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::vector<std::string>& imagePaths, int scrollSpeed)
-    : renderer(renderer), screenHeight(0), yOffset(0) 
+    : renderer(renderer), screenHeight(0), yOffset(0), scrollSpeed(0), totalHeight(0)
 {
     for (const auto& path : imagePaths) {
         SDL_Surface* surface = IMG_Load(path.c_str());
         if (surface == nullptr) {
             SDL_Log("Failed to load image: %s", SDL_GetError());
+            //SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Failed to load image: %s", SDL_GetError(), nullptr);
             continue;
         }
 
@@ -21,12 +22,12 @@ ParallaxBackground::ParallaxBackground(SDL_Renderer* renderer, const std::vector
         if (texture == nullptr) {
             SDL_Log("Failed to create texture: %s", SDL_GetError());
             continue;
-
-            layers.push_back(texture);
-            int w, h;
-            SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-            totalHeight += h;
         }
+        
+        layers.push_back(texture);
+        int w, h;
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+        totalHeight += h;
     }
 }
 
@@ -46,7 +47,7 @@ void ParallaxBackground::scroll(int scrollSpeed) {
 
 void ParallaxBackground::titleRender()
 {
-      // RJP - To be changed.
+    // RJP - To be changed.
     int y = yOffset;
     int bC = 1160; // backgroundCenterer
     for (SDL_Texture* texture : layers) {
