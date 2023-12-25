@@ -7,6 +7,7 @@
 
 #include "loadingprocess.h"
 #include "entities/player.h"
+#include "enemy.h"
 #include "controls.h"
 #include "parallaxBackground.h"
 #include "debugText.h"
@@ -16,12 +17,13 @@
 #include "processmanager.h"
 #include "resourcemanager.h"
 #include "entitymanager.h"
-
-#include <string>
+#include "renderer.h"
 #include <SDL.h>
 #include <SDL_image.h>
+#include <string>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 // Forwards
 struct SDL_Texture;
@@ -85,20 +87,25 @@ private:
 	Controls* controls;
 	ParallaxBackground* background;
 	ParallaxBackground* titleBackground;
+	Renderer* textureRenderer;
+
 	int iInputReturn;
 
 	bool quit;
+	bool bStateSwitch;
 	int scrollSpeed = 1;
 	int prevTime;
+	int gameTime = 0;
 	int debugTextSize;
 	int debugTextSizeInGame;
-	std::vector<std::string> imagePaths;
-	std::vector<std::string> titleImagePaths;
+
 	GameState currentState = GameState::START;
 	SDL_Color textColor;
 	SDL_Event event;
+
 	std::string playerScore;
 	std::string playerEntityHealth;
-
-	bool bStateSwitch;
+	std::vector<std::string> imagePaths;
+	std::vector<std::string> titleImagePaths;
+	std::vector<Enemy> vEnemies;
 };

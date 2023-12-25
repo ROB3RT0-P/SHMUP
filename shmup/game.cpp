@@ -87,6 +87,8 @@ bool Game::loadInitialResources()
 	audio = new AudioPlayer();
 	audio->play("Data/music/BeautyFlow.mp3");
 	controls = new Controls(*playerEntity);
+
+
 	return true;
 }
 
@@ -118,6 +120,9 @@ void Game::tickLogic(float deltaTime) {
 		break;
 
 	case GameState::PLAY:
+
+		gameTime = SDL_GetTicks() - prevTime;
+
 		if (bStateSwitch)
 		{
 			audio->play("Data/music/SpaceFighterLoop.mp3");
@@ -132,7 +137,25 @@ void Game::tickLogic(float deltaTime) {
 		Game::handleEvents(deltaTime);
 		playerEntity->update(deltaTime);
 		background->scroll(3);
-		playerScore = std::to_string((SDL_GetTicks() - prevTime) / 100);
+		playerScore = std::to_string(gameTime / 100);
+
+		//Enemies
+		if (gameTime % 5)
+		{
+			Enemy* enemy;
+			enemy->init(fScreenWidth, fScreenHeight, *gRenderer);
+			vEnemies.push_back(*enemy);
+		}
+
+		for (auto& enemy : vEnemies)
+		{
+			enemy.update(deltaTime);
+
+			if (enemy.checkBounds(fScreenWidth, fScreenHeight))
+			{
+				delete &enemy;
+			}
+		}
 		break;
 
 	case GameState::PAUSE:
@@ -191,6 +214,13 @@ void Game::render(const Info& info)
 
 		blit(playerTexture, playerEntity->getPlayerX(), playerEntity->getPlayerY());
 		SDL_assert(playerTexture);
+
+		//Enemies
+		for (auto& enemy : vEnemies)
+		{
+			enemy.render();
+		}
+
 		break;
 
 	case GameState::PAUSE:

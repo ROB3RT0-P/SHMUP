@@ -26,9 +26,14 @@
 *********************************************************************************/
 
 /*********************************************************************************
-	RJP - TODO: - Switch to entity manager
+	RJP - TODO: 
+		Priority:
+				- renderer.h
 				- Render enemies
+				- Rewrite move()
 				- Collision
+		Non-Priority:
+				- Switch to entity manager
 				- Game over text
 				- Game over music
 				- Code cleanup - Variable names

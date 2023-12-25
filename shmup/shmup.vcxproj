@@ -161,6 +161,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parallaxBackground.cpp" />
     <ClCompile Include="processmanager.cpp" />
+    <ClCompile Include="renderer.h" />
     <ClCompile Include="resourcemanager.cpp" />
     <ClCompile Include="stateManager.cpp" />
     <ClCompile Include="textPulse.cpp" />

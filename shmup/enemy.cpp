@@ -5,14 +5,15 @@
 
 #include "enemy.h"
 
-void Enemy::move(int newX, int newY, float deltaTime)
+
+void Enemy::update(float deltaTime)
 {
 	// Calculate the distance to move based on playerSpeed and deltaTime
 	float moveDistance = iEnemySpeed_ * deltaTime;
 
 	// Calculate the target position after movement
-	float targetX = fEnemyX_ + (newX * moveDistance);
-	float targetY = fEnemyY_ + (newY * moveDistance);
+	float targetX = fEnemyX_ + (fTargetPosX_ * moveDistance);
+	float targetY = fEnemyY_ + (fTargetPosY_ * moveDistance);
 
 	// Interpolate between current position and target position
 	fEnemyX_ = lerp(fEnemyX_, targetX, deltaTime);
@@ -24,16 +25,18 @@ float Enemy::lerp(float start, float end, float t)
 	return start + t * (end - start);
 }
 
-void Enemy::createEnemies( float screenWidth, float screenHeight, int numEnemies )
+bool Enemy::checkBounds(float screenWidth, float screenHeight)
 {
-	for (int i = 0; i < numEnemies; ++i)
+	if (fEnemyY_ > screenHeight)
 	{
-		vEnemies.push_back(Enemy(screenWidth, screenHeight));
+		return true;
 	}
+	return false;
 }
 
 void Enemy::render() 
 {
 	tTexture = global::resourceManager()->getResourceAsTexture(raw_enum(global::Res::EnemySprite));
-	global::game()->blit(tTexture, fEnemyX_, fEnemyY_);
+	//global::game()->blit(tTexture, fEnemyX_, fEnemyY_);
+	textureRender->
 }
